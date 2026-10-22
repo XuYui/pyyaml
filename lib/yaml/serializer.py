@@ -85,6 +85,8 @@ class Serializer:
             if isinstance(node, ScalarNode):
                 detected_tag = self.resolve(ScalarNode, node.value, (True, False))
                 default_tag = self.resolve(ScalarNode, node.value, (False, True))
+                # Empty scalars cannot be emitted in plain style, so they
+                # are never plain-implicit.
                 implicit = (node.tag == detected_tag and node.value != ''), \
                         (node.tag == default_tag)
                 self.emit(ScalarEvent(alias, node.tag, implicit, node.value,
