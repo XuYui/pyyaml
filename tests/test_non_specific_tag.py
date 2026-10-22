@@ -65,3 +65,19 @@ def test_empty_null_is_not_emitted_as_non_specific_tag(dumper):
     output = yaml.serialize(node, Dumper=dumper)
     assert "!!null" in output
     assert yaml.safe_load(output) == {"key": None}
+
+
+@pytest.mark.parametrize(
+    "document, expected",
+    [
+        ("{key: }", {"key": None}),
+        ("[key:]", [{"key": None}]),
+        ('key: !!null ""', {"key": None}),
+        ('!!null ""', None),
+    ],
+)
+@pytest.mark.parametrize("dumper", DUMPERS, ids=lambda dumper: dumper.__name__)
+def test_empty_null_round_trips(dumper, document, expected):
+    node = yaml.compose(document)
+    output = yaml.serialize(node, Dumper=dumper)
+    assert yaml.safe_load(output) == expected

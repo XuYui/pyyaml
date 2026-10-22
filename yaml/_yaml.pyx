@@ -1290,8 +1290,8 @@ cdef class CEmitter:
                 plain_implicit = 0
                 quoted_implicit = 0
                 tag_object = node.tag
-                # Empty scalars cannot be emitted in plain style, so they
-                # are never plain-implicit.
+                # libyaml writes a non-specific "!" tag for an empty scalar
+                # that is plain-implicit but has to be quoted.
                 if node.value != '' \
                         and self.resolve(ScalarNode, node.value, (True, False)) == tag_object:
                     plain_implicit = 1
